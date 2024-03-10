@@ -5,6 +5,7 @@ import os
 import json
 from data.users import User
 from data.jobs import Jobs
+from data.departments import Department
 from forms.registr import RegisterForm
 
 
