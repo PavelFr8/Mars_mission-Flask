@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% set worker = workers|random %}
+<center>
+<h4>{{ worker.name }} {{ worker.surname }}</h4>
+<br>
+<img src="{{ url_for('static', filename='img/member/' + worker.photo) }}">
+<br>
+<p>{{ worker.specialties|join(', ') }}</p>
+</center>
+
+{% endblock %}

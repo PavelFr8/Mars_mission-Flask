@@ -1,6 +1,8 @@
 from flask import Flask, redirect, render_template, request, url_for
 from forms.login import LoginForm
 import os
+import json
+from random import choice
 
 
 app = Flask(__name__)
@@ -75,6 +77,14 @@ def galery():
         # print(imgs)
 
     return render_template('carusel.html', title='Галерея', imgs=imgs)
+
+
+@app.route('/member')
+def member():
+    with open('templates/workers.json', 'r', encoding='utf-8') as json_file:
+        workers = json.load(json_file)
+
+    return render_template('member.html', workers=workers)
 
 
 if __name__ == '__main__':
