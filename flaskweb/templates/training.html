@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1 style="text_aling: center">
+        {% if "инженер" in prof or "строитель" in prof%}
+            Инженерные тренажеры
+            <br>
+            <img src="{{ url_for('static', filename='img/инженер.png') }}">
+        {% else %}
+            Научные симуляторы
+        <br>
+            <img src="{{ url_for('static', filename='img/ученый.png') }}">
+        {% endif %}
+    </h1>
+
+
+{% endblock %}

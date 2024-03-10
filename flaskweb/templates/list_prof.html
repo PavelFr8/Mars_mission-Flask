@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2>Список профессий:</h2>
+  {% set prof_list = ['Мусорщик', 'Уборщик', 'Капитан', 'Повар', 'Стендапер', 'Хомячок', 'Безработный', 'Фрилансер'] %}
+  {% if sp == 'ul' %}
+  <ul>
+      {% for prof in prof_list %}
+      <li>{{ prof }}</li>
+      {% endfor %}
+  </ul>
+  {% elif sp == 'ol' %}
+  <ol>
+      {% for prof in prof_list %}
+      <li>{{ prof }}</li>
+      {% endfor %}
+  {% endif %}
+  </ol>
+
+
+{% endblock %}

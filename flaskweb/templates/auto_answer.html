@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<div>
+    Фамилия: {{person.surname}} <br>
+    Имя: {{person.name}} <br>
+    Образование: {{person.education}} <br>
+    Профессия: {{person.profession}} <br>
+    Пол: {{person.sex}} <br>
+    Мотивация: {{person.motivation}} <br>
+    Готовы остаться на Марсе: {{person.ready}} <br>
+</div>
+
+{% endblock %}
