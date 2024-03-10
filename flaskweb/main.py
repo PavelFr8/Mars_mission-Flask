@@ -1,9 +1,13 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request, url_for
 from forms.login import LoginForm
+import os
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandex_123'
+app.config['UPLOAD_FOLDER'] = 'static/img/carousel'
+
+imgs = ['4.png', '7.png', '13.png', '17.png']
 
 
 @app.route('/index/<title>')
@@ -59,6 +63,18 @@ def table(sex, age):
         'age': age
     }
     return render_template('table.html', title='Личная каюта', **params)
+
+
+@app.route('/galery', methods=['POST', 'GET'])
+def galery():
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filename)
+        imgs.append(file.filename)
+        # print(imgs)
+
+    return render_template('carusel.html', title='Галерея', imgs=imgs)
 
 
 if __name__ == '__main__':
