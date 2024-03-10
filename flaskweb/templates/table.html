@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h2 align="center">Оформление каюты</h2>
+    <table>
+      <tr align="center" >
+        <th width="300px">Цвет стен</th>
+        <th>Эмблема</th>
+      </tr>
+      <tr>
+        {% if sex == 'male' %}
+        <td style="background-color: brown"></td>
+        {% elif sex == 'female' %}
+        <td style="background-color: pink"></td>
+        {% endif %}
+        {% if age < 21 %}
+        <td><img src="{{ url_for('static', filename='img/young.png') }}" width="300px"></td>
+        {% else %}
+        <td><img src="{{ url_for('static', filename='img/old.png') }}" width="300px"></td>
+        {% endif %}
+      </tr>
+    </table>
+
+
+{% endblock %}
