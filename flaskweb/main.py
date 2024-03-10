@@ -1,8 +1,11 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, session
+from flaskweb.data import db_session
 from forms.login import LoginForm
 import os
 import json
-from random import choice
+from data.users import User
+from data.jobs import Jobs
+from data.db_session import global_init
 
 
 app = Flask(__name__)
@@ -87,5 +90,13 @@ def member():
     return render_template('member.html', workers=workers)
 
 
+@app.route('/logs')
+def logs():
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).all()
+    return render_template('logs.html', jobs=jobs)
+
+
 if __name__ == '__main__':
+    db_session.global_init("db/mars.db")
     app.run(port='8080', host='127.0.0.1')
