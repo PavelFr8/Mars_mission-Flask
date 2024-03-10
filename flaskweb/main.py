@@ -44,5 +44,14 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+@app.route('/distribution')
+def distribution():
+    params = {
+        'list': ['Скот Ридли', 'Дмитрий Нагиев', 'Лёша Вовочкин', 'Вова Лёшечкин', 'Огурец', 'Ин Су Лин'],
+    }
+    return render_template('distribution.html', title='По каютам!', **params)
+
+
+
 if __name__ == '__main__':
     app.run(port='8080', host='127.0.0.1')
