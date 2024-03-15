@@ -1,10 +1,11 @@
 from .db_session import SqlAlchemyBase
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class User(SqlAlchemyBase):
+class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     surname = sa.Column(sa.String)
@@ -18,7 +19,6 @@ class User(SqlAlchemyBase):
     modified_date = sa.Column(sa.DateTime)
 
     users = orm.relationship('Jobs', back_populates='user')
-    departments = orm.relationship('Departments', back_populates='user')
 
     def __repr__(self) -> str:
         return f'<{self.id}> {self.name} {self.email}'
