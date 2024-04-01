@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for, session
+from flask import Flask, redirect, render_template, request, url_for, session, abort
 from flaskweb.data import db_session
 from forms.login import LoginForm
 import os
@@ -6,30 +6,21 @@ import json
 from data.users import User
 from data.jobs import Jobs
 from forms.registr import RegisterForm
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.jobform import JobForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandex_123'
-app.config['UPLOAD_FOLDER'] = 'static/img/carousel'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
+########################################################################################################################
+
+app.config['UPLOAD_FOLDER'] = 'static/img/carousel'
 imgs = ['4.png', '7.png', '13.png', '17.png']
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
-
-@app.route('/')
-def index():
-    db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).all()
-    return render_template('logs.html', jobs=jobs)
 
 
 @app.route('/training/<prof>')
@@ -109,6 +100,16 @@ def logs():
     return render_template('logs.html', jobs=jobs)
 
 
+########################################################################################################################
+
+
+@app.route('/')
+def index():
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).all()
+    return render_template('logs.html', jobs=jobs)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -136,6 +137,12 @@ def register():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -159,6 +166,7 @@ def logout():
 
 
 @app.route('/job', methods=['GET', 'POST'])
+@login_required
 def job():
     form = JobForm()
     if form.validate_on_submit():
@@ -177,6 +185,56 @@ def job():
         db_sess.commit()
         return redirect('/')
     return render_template('job.html', title='Новая работа', form=form)
+
+
+@app.route('/job_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_news(id):
+    db_sess = db_session.create_session()
+    jobs: Jobs = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.user == current_user).first()
+    if jobs:
+        db_sess.delete(jobs)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
+
+@app.route('/job_edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_job(id):
+    form = JobForm()
+    db_sess = db_session.create_session()
+    job = db_sess.query(Jobs).get(id)
+
+    if not job or job.user != current_user:
+        abort(404)
+
+    if request.method == 'GET':
+        form.team_leader.data = job.team_leader
+        form.job.data = job.job
+        form.work_size.data = job.work_size
+        form.collaborators.data = job.collaborators
+        form.start_date.data = job.start_date
+        form.end_date.data = job.end_date
+        form.is_finished.data = job.is_finished
+
+    if form.validate_on_submit():
+        job.team_leader = form.team_leader.data
+        job.job = form.job.data
+        job.work_size = form.work_size.data
+        job.collaborators = form.collaborators.data
+        job.start_date = form.start_date.data
+        job.end_date = form.end_date.data
+        job.is_finished = form.is_finished.data
+
+        db_sess.commit()
+
+        return redirect('/')
+
+    return render_template('job.html', title='Редактирование работы', form=form)
+
+
 
 
 if __name__ == '__main__':

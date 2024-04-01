@@ -18,7 +18,7 @@ class User(SqlAlchemyBase, UserMixin):
     email = sa.Column(sa.String, unique=True)
     modified_date = sa.Column(sa.DateTime)
 
-    users = orm.relationship('Jobs', back_populates='user')
+    jobs = orm.relationship('Jobs', back_populates='user')
 
     def __repr__(self) -> str:
         return f'<{self.id}> {self.name} {self.email}'
