@@ -16,6 +16,7 @@
         {% if current_user.is_authenticated %}
                 <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
                 <a class="btn btn-primary" href="/job">Новая работа</a>
+                <a class="btn btn-primary" href="/add_department">Новый департамент</a>
         {% else %}
                  <p>
         <a class="btn btn-primary " href="/register">Зарегистрироваться</a>

@@ -19,6 +19,7 @@ class User(SqlAlchemyBase, UserMixin):
     modified_date = sa.Column(sa.DateTime)
 
     jobs = orm.relationship('Jobs', back_populates='user')
+    departments = orm.relationship('Department', back_populates='user')
 
     def __repr__(self) -> str:
         return f'<{self.id}> {self.name} {self.email}'
@@ -28,10 +29,3 @@ class User(SqlAlchemyBase, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
-
-
-
-
-
-
-
