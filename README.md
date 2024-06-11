@@ -1,1 +1,1 @@
-Study repository where i learn flask
+This is a small site for expedition to Mars
